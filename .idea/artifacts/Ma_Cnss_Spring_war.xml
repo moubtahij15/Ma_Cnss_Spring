@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="Ma_Cnss_Spring:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>Ma_Cnss_Spring</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="Ma_Cnss_Spring-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="Ma_Cnss_Spring:war exploded" />
+    </root>
+  </artifact>
+</component>

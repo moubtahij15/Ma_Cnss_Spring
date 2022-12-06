@@ -50,7 +50,9 @@ public class DossierMedicalController {
 
         model.putIfAbsent("currentDossier", new Dossiermedical());
         model.putIfAbsent("step", 1);
+
         model.put("dossier", new Object());
+        model.put("currentDossier", (Dossiermedical) model.get("currentDossier"));
         return "Agent/addDossier";
     }
 

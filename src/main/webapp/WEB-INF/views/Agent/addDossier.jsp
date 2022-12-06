@@ -91,7 +91,7 @@
                         ">
                 <div class="mx-auto max-w-lg text-center">
                     <h1 class="text-2xl font-bold sm:text-3xl"> ${sessionScope.step==1?'Patient Info':sessionScope.step==2?'Medicament : ':sessionScope.step==3?'Document : ':' Validation Dossier'} </h1>
-<%--                    <h1 class="text-2xl font-bold sm:text-3xl"> ${sessionScope.step==4?' le mentant remboyrssable est '+cu :''} ${sessionScope.st} </h1>--%>
+                    <h1 class="text-2xl font-bold sm:text-3xl"> ${sessionScope.step==4?' le mentant remboyrssable est '+sessionScope.cc :''} </h1>
 
                 </div>
 

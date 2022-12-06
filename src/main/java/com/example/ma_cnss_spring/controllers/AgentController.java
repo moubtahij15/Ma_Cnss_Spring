@@ -15,7 +15,8 @@ import java.util.Map;
 @Controller
 @RequestMapping("/agent")
 //@SessionAttributes({"step", "currentDossier"})
-@SessionAttributes("step")
+//@SessionAttributes(value = "currentDossier,cc")
+@SessionAttributes({"step", "id_consultation", "id_dossier", "currentDossier"})
 public class AgentController {
 
     final AgentService agentService;

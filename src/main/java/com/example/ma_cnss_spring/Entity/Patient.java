@@ -103,7 +103,7 @@ public class Patient {
         return result;
     }
 
-    @OneToMany(mappedBy = "patientByIdConsultation")
+    @OneToMany(mappedBy = "patientByIdPatient")
     public Collection<Dossiermedical> getDossiermedicalsById() {
         return dossiermedicalsById;
     }

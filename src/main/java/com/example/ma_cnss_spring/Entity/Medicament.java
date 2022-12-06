@@ -2,6 +2,8 @@ package com.example.ma_cnss_spring.Entity;
 
 import jakarta.persistence.*;
 
+import java.util.Collection;
+
 @Entity
 public class Medicament {
     private int id;
@@ -9,6 +11,7 @@ public class Medicament {
     private String codeBarre;
     private Double prixBase;
     private double prixRembourssable;
+    private Collection<MedicamentPris> medicamentPrisesById;
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -88,5 +91,14 @@ public class Medicament {
         temp = Double.doubleToLongBits(prixRembourssable);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
+    }
+
+    @OneToMany(mappedBy = "medicamentByIdMedicament")
+    public Collection<MedicamentPris> getMedicamentPrisesById() {
+        return medicamentPrisesById;
+    }
+
+    public void setMedicamentPrisesById(Collection<MedicamentPris> medicamentPrisesById) {
+        this.medicamentPrisesById = medicamentPrisesById;
     }
 }

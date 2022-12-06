@@ -2,6 +2,8 @@ package com.example.ma_cnss_spring.Entity;
 
 import jakarta.persistence.*;
 
+import java.util.Collection;
+
 @Entity
 public class Document {
     private int id;
@@ -9,6 +11,7 @@ public class Document {
     private String type;
     private String code;
     private Integer tauxRemboursement;
+    private Collection<DocumentPris> documentPrisesById;
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -61,30 +64,14 @@ public class Document {
         this.tauxRemboursement = tauxRemboursement;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
 
-        Document document = (Document) o;
-
-        if (id != document.id) return false;
-        if (nom != null ? !nom.equals(document.nom) : document.nom != null) return false;
-        if (type != null ? !type.equals(document.type) : document.type != null) return false;
-        if (code != null ? !code.equals(document.code) : document.code != null) return false;
-        if (tauxRemboursement != null ? !tauxRemboursement.equals(document.tauxRemboursement) : document.tauxRemboursement != null)
-            return false;
-
-        return true;
+    @OneToMany(mappedBy = "documentByIdDocument")
+    public Collection<DocumentPris> getDocumentPrisesById() {
+        return documentPrisesById;
     }
 
-    @Override
-    public int hashCode() {
-        int result = id;
-        result = 31 * result + (nom != null ? nom.hashCode() : 0);
-        result = 31 * result + (type != null ? type.hashCode() : 0);
-        result = 31 * result + (code != null ? code.hashCode() : 0);
-        result = 31 * result + (tauxRemboursement != null ? tauxRemboursement.hashCode() : 0);
-        return result;
+    public void setDocumentPrisesById(Collection<DocumentPris> documentPrisesById) {
+        this.documentPrisesById = documentPrisesById;
     }
+
 }

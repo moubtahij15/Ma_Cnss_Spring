@@ -6,9 +6,12 @@ import jakarta.persistence.*;
 @Table(name = "document_pris", schema = "macnss", catalog = "")
 public class DocumentPris {
     private int id;
-    private String code;
     private int idConsultation;
-    private Consultation consultationByIdConsultation;
+    private Integer idDocument;
+
+    private Double prix;
+    private ConsultationPris consultationPrisByIdConsultation;
+    private Document documentByIdDocument;
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -22,16 +25,6 @@ public class DocumentPris {
     }
 
     @Basic
-    @Column(name = "code", nullable = false, length = 100)
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    @Basic
     @Column(name = "id_consultation", nullable = false)
     public int getIdConsultation() {
         return idConsultation;
@@ -39,6 +32,26 @@ public class DocumentPris {
 
     public void setIdConsultation(int idConsultation) {
         this.idConsultation = idConsultation;
+    }
+
+    @Basic
+    @Column(name = "prix", nullable = false)
+    public double getPrix() {
+        return prix;
+    }
+
+    public void setPrix(Double prix) {
+        this.prix = prix;
+    }
+
+    @Basic
+    @Column(name = "id_document", nullable = true)
+    public Integer getIdDocument() {
+        return idDocument;
+    }
+
+    public void setIdDocument(Integer idDocument) {
+        this.idDocument = idDocument;
     }
 
     @Override
@@ -50,7 +63,7 @@ public class DocumentPris {
 
         if (id != that.id) return false;
         if (idConsultation != that.idConsultation) return false;
-        if (code != null ? !code.equals(that.code) : that.code != null) return false;
+        if (idDocument != null ? !idDocument.equals(that.idDocument) : that.idDocument != null) return false;
 
         return true;
     }
@@ -58,18 +71,42 @@ public class DocumentPris {
     @Override
     public int hashCode() {
         int result = id;
-        result = 31 * result + (code != null ? code.hashCode() : 0);
         result = 31 * result + idConsultation;
+        result = 31 * result + (idDocument != null ? idDocument.hashCode() : 0);
         return result;
     }
 
     @ManyToOne
-    @JoinColumn(name = "id_consultation", referencedColumnName = "id", nullable = false,insertable = false,updatable = false)
-    public Consultation getConsultationByIdConsultation() {
-        return consultationByIdConsultation;
+    @JoinColumn(name = "id_consultation", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    public ConsultationPris getConsultationPrisByIdConsultation() {
+        return consultationPrisByIdConsultation;
     }
 
-    public void setConsultationByIdConsultation(Consultation consultationByIdConsultation) {
-        this.consultationByIdConsultation = consultationByIdConsultation;
+    public void setConsultationPrisByIdConsultation(ConsultationPris consultationPrisByIdConsultation) {
+        this.consultationPrisByIdConsultation = consultationPrisByIdConsultation;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "id_document", referencedColumnName = "id", insertable = false, updatable = false)
+    public Document getDocumentByIdDocument() {
+        return documentByIdDocument;
+    }
+
+    public void setDocumentByIdDocument(Document documentByIdDocument) {
+        this.documentByIdDocument = documentByIdDocument;
+    }
+
+    public DocumentPris() {
+    }
+
+    public DocumentPris(int idConsultation, Integer idDocument) {
+        this.idConsultation = idConsultation;
+        this.idDocument = idDocument;
+    }
+
+    public DocumentPris(int idConsultation, Integer idDocument, Double prix) {
+        this.idConsultation = idConsultation;
+        this.idDocument = idDocument;
+        this.prix = prix;
     }
 }

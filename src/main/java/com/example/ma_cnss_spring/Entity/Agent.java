@@ -10,17 +10,6 @@ public class Agent {
     private String email;
     private String password;
 
-    public Agent(String prenom, String nom, String email, String password) {
-        this.prenom = prenom;
-        this.nom = nom;
-        this.email = email;
-        this.password = password;
-    }
-
-    public Agent() {
-
-    }
-
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id", nullable = false)

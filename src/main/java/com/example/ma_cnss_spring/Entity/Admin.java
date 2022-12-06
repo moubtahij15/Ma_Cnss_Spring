@@ -8,10 +8,6 @@ public class Admin {
     private String email;
     private String password;
 
-    public Admin() {
-
-    }
-
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id", nullable = false)
@@ -40,11 +36,6 @@ public class Admin {
     }
 
     public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Admin(String email, String password) {
-        this.email = email;
         this.password = password;
     }
 

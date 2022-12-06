@@ -6,9 +6,10 @@ import jakarta.persistence.*;
 @Table(name = "medicament_pris", schema = "macnss", catalog = "")
 public class MedicamentPris {
     private int id;
-    private String codeBarre;
     private int idConsultation;
-    private Consultation consultationByIdConsultation;
+    private Integer idMedicament;
+    private ConsultationPris consultationPrisByIdConsultation;
+    private Medicament medicamentByIdMedicament;
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -22,16 +23,6 @@ public class MedicamentPris {
     }
 
     @Basic
-    @Column(name = "code_barre", nullable = false, length = 100)
-    public String getCodeBarre() {
-        return codeBarre;
-    }
-
-    public void setCodeBarre(String codeBarre) {
-        this.codeBarre = codeBarre;
-    }
-
-    @Basic
     @Column(name = "id_consultation", nullable = false)
     public int getIdConsultation() {
         return idConsultation;
@@ -39,6 +30,16 @@ public class MedicamentPris {
 
     public void setIdConsultation(int idConsultation) {
         this.idConsultation = idConsultation;
+    }
+
+    @Basic
+    @Column(name = "id_medicament", nullable = true)
+    public Integer getIdMedicament() {
+        return idMedicament;
+    }
+
+    public void setIdMedicament(Integer idMedicament) {
+        this.idMedicament = idMedicament;
     }
 
     @Override
@@ -50,7 +51,7 @@ public class MedicamentPris {
 
         if (id != that.id) return false;
         if (idConsultation != that.idConsultation) return false;
-        if (codeBarre != null ? !codeBarre.equals(that.codeBarre) : that.codeBarre != null) return false;
+        if (idMedicament != null ? !idMedicament.equals(that.idMedicament) : that.idMedicament != null) return false;
 
         return true;
     }
@@ -58,18 +59,37 @@ public class MedicamentPris {
     @Override
     public int hashCode() {
         int result = id;
-        result = 31 * result + (codeBarre != null ? codeBarre.hashCode() : 0);
         result = 31 * result + idConsultation;
+        result = 31 * result + (idMedicament != null ? idMedicament.hashCode() : 0);
         return result;
     }
 
     @ManyToOne
     @JoinColumn(name = "id_consultation", referencedColumnName = "id", nullable = false,insertable = false,updatable = false)
-    public Consultation getConsultationByIdConsultation() {
-        return consultationByIdConsultation;
+    public ConsultationPris getConsultationPrisByIdConsultation() {
+        return consultationPrisByIdConsultation;
     }
 
-    public void setConsultationByIdConsultation(Consultation consultationByIdConsultation) {
-        this.consultationByIdConsultation = consultationByIdConsultation;
+    public void setConsultationPrisByIdConsultation(ConsultationPris consultationPrisByIdConsultation) {
+        this.consultationPrisByIdConsultation = consultationPrisByIdConsultation;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "id_medicament", referencedColumnName = "id",insertable = false,updatable = false)
+    public Medicament getMedicamentByIdMedicament() {
+        return medicamentByIdMedicament;
+    }
+
+    public void setMedicamentByIdMedicament(Medicament medicamentByIdMedicament) {
+        this.medicamentByIdMedicament = medicamentByIdMedicament;
+    }
+
+
+    public MedicamentPris(int idConsultation, Integer idMedicament) {
+        this.idConsultation = idConsultation;
+        this.idMedicament = idMedicament;
+    }
+
+    public MedicamentPris() {
     }
 }

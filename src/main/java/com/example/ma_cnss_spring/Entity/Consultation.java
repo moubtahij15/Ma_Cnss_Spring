@@ -8,10 +8,8 @@ import java.util.Collection;
 public class Consultation {
     private int id;
     private String type;
-    private int prixRemboursement;
-    private Collection<DocumentPris> documentPrisesById;
-    private Collection<Dossiermedical> dossiermedicalsById;
-    private Collection<MedicamentPris> medicamentPrisesById;
+    private Double prixRembourssable;
+    private Collection<ConsultationPris> consultationPrisesById;
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -25,7 +23,7 @@ public class Consultation {
     }
 
     @Basic
-    @Column(name = "type", nullable = false, length = 100)
+    @Column(name = "type", nullable = true, length = 100)
     public String getType() {
         return type;
     }
@@ -35,13 +33,21 @@ public class Consultation {
     }
 
     @Basic
-    @Column(name = "prixRemboursement", nullable = false)
-    public int getPrixRemboursement() {
-        return prixRemboursement;
+    @Column(name = "prix_rembourssable", nullable = true, precision = 0)
+    public Double getPrixRembourssable() {
+        return prixRembourssable;
     }
 
-    public void setPrixRemboursement(int prixRemboursement) {
-        this.prixRemboursement = prixRemboursement;
+    public void setPrixRembourssable(Double prixRembourssable) {
+        this.prixRembourssable = prixRembourssable;
+    }
+
+    public Consultation(String type, Double prixRembourssable) {
+        this.type = type;
+        this.prixRembourssable = prixRembourssable;
+    }
+
+    public Consultation() {
     }
 
     @Override
@@ -52,8 +58,9 @@ public class Consultation {
         Consultation that = (Consultation) o;
 
         if (id != that.id) return false;
-        if (prixRemboursement != that.prixRemboursement) return false;
         if (type != null ? !type.equals(that.type) : that.type != null) return false;
+        if (prixRembourssable != null ? !prixRembourssable.equals(that.prixRembourssable) : that.prixRembourssable != null)
+            return false;
 
         return true;
     }
@@ -62,34 +69,16 @@ public class Consultation {
     public int hashCode() {
         int result = id;
         result = 31 * result + (type != null ? type.hashCode() : 0);
-        result = 31 * result + prixRemboursement;
+        result = 31 * result + (prixRembourssable != null ? prixRembourssable.hashCode() : 0);
         return result;
     }
 
-    @OneToMany(mappedBy = "consultationByIdConsultation")
-    public Collection<DocumentPris> getDocumentPrisesById() {
-        return documentPrisesById;
+    @OneToMany(mappedBy = "consultationByIdConsultation",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    public Collection<ConsultationPris> getConsultationPrisesById() {
+        return consultationPrisesById;
     }
 
-    public void setDocumentPrisesById(Collection<DocumentPris> documentPrisesById) {
-        this.documentPrisesById = documentPrisesById;
-    }
-
-    @OneToMany(mappedBy = "consultationByIdConsultation")
-    public Collection<Dossiermedical> getDossiermedicalsById() {
-        return dossiermedicalsById;
-    }
-
-    public void setDossiermedicalsById(Collection<Dossiermedical> dossiermedicalsById) {
-        this.dossiermedicalsById = dossiermedicalsById;
-    }
-
-    @OneToMany(mappedBy = "consultationByIdConsultation")
-    public Collection<MedicamentPris> getMedicamentPrisesById() {
-        return medicamentPrisesById;
-    }
-
-    public void setMedicamentPrisesById(Collection<MedicamentPris> medicamentPrisesById) {
-        this.medicamentPrisesById = medicamentPrisesById;
+    public void setConsultationPrisesById(Collection<ConsultationPris> consultationPrisesById) {
+        this.consultationPrisesById = consultationPrisesById;
     }
 }

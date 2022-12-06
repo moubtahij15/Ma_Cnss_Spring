@@ -1,5 +1,6 @@
 package com.example.ma_cnss_spring.Entity;
 
+import com.example.ma_cnss_spring.Helpers.Etat;
 import jakarta.persistence.*;
 
 @Entity
@@ -9,8 +10,12 @@ public class Dossiermedical {
     private int idConsultation;
     private int idPatient;
     private String etat;
-    private Patient patientByIdConsultation;
-    private Consultation consultationByIdConsultation;
+    private Double mentantBase;
+    private ConsultationPris consultationPrisByIdConsultation;
+    private Patient patientByIdPatient;
+
+    public Dossiermedical() {
+    }
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -63,6 +68,16 @@ public class Dossiermedical {
         this.etat = etat;
     }
 
+    @Basic
+    @Column(name = "mentant_base", nullable = true, precision = 0)
+    public Double getMentantBase() {
+        return mentantBase;
+    }
+
+    public void setMentantBase(Double mentantBase) {
+        this.mentantBase = mentantBase;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -75,6 +90,7 @@ public class Dossiermedical {
         if (idConsultation != that.idConsultation) return false;
         if (idPatient != that.idPatient) return false;
         if (etat != null ? !etat.equals(that.etat) : that.etat != null) return false;
+        if (mentantBase != null ? !mentantBase.equals(that.mentantBase) : that.mentantBase != null) return false;
 
         return true;
     }
@@ -89,26 +105,33 @@ public class Dossiermedical {
         result = 31 * result + idConsultation;
         result = 31 * result + idPatient;
         result = 31 * result + (etat != null ? etat.hashCode() : 0);
+        result = 31 * result + (mentantBase != null ? mentantBase.hashCode() : 0);
         return result;
     }
 
     @ManyToOne
     @JoinColumn(name = "id_consultation", referencedColumnName = "id", nullable = false,insertable = false,updatable = false)
-    public Patient getPatientByIdConsultation() {
-        return patientByIdConsultation;
+    public ConsultationPris getConsultationPrisByIdConsultation() {
+        return consultationPrisByIdConsultation;
     }
 
-    public void setPatientByIdConsultation(Patient patientByIdConsultation) {
-        this.patientByIdConsultation = patientByIdConsultation;
+    public void setConsultationPrisByIdConsultation(ConsultationPris consultationPrisByIdConsultation) {
+        this.consultationPrisByIdConsultation = consultationPrisByIdConsultation;
+    }
+
+    public Dossiermedical(int idConsultation, int idPatient) {
+        this.idConsultation = idConsultation;
+        this.idPatient = idPatient;
+        this.etat= Etat.EN_ATTENTE.toString();
     }
 
     @ManyToOne
-    @JoinColumn(name = "id_consultation", referencedColumnName = "id", nullable = false,insertable = false,updatable = false)
-    public Consultation getConsultationByIdConsultation() {
-        return consultationByIdConsultation;
+    @JoinColumn(name = "id_patient", referencedColumnName = "id", nullable = false,insertable = false,updatable = false)
+    public Patient getPatientByIdPatient() {
+        return patientByIdPatient;
     }
 
-    public void setConsultationByIdConsultation(Consultation consultationByIdConsultation) {
-        this.consultationByIdConsultation = consultationByIdConsultation;
+    public void setPatientByIdPatient(Patient patientByIdPatient) {
+        this.patientByIdPatient = patientByIdPatient;
     }
 }

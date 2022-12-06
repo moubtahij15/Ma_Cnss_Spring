@@ -7,17 +7,20 @@
 
         <class>com.example.ma_cnss_spring.Entity.Admin</class>
         <class>com.example.ma_cnss_spring.Entity.Agent</class>
-        <class>com.example.ma_cnss_spring.Entity.Consultation</class>
+        <class>com.example.ma_cnss_spring.Entity.ConsultationPris</class>
         <class>com.example.ma_cnss_spring.Entity.Document</class>
         <class>com.example.ma_cnss_spring.Entity.DocumentPris</class>
         <class>com.example.ma_cnss_spring.Entity.Dossiermedical</class>
         <class>com.example.ma_cnss_spring.Entity.Medicament</class>
         <class>com.example.ma_cnss_spring.Entity.MedicamentPris</class>
         <class>com.example.ma_cnss_spring.Entity.Patient</class>
+        <class>com.example.ma_cnss_spring.Entity.Consultation</class>
         <properties>
             <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/macnss"/>
             <property name="hibernate.connection.driver_class" value="com.mysql.cj.jdbc.Driver"/>
             <property name="hibernate.connection.username" value="root"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <property name="hibernate.show_sql" value="true"/>
         </properties>
     </persistence-unit>
 </persistence>

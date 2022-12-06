@@ -3,7 +3,7 @@ package com.example.ma_cnss_spring.Dao;
 import java.util.List;
 
 public interface ICrudRepository <T>{
-    public T save(T t);
+    public void save(T t);
 
     public List<T> findAll();
 

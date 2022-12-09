@@ -10,5 +10,6 @@ public interface PatientRepository extends JpaRepository<Patient, Integer> {
 
     @Query("select patient from Patient  patient where patient.matricule=?1")
     public Patient findIdByMatricule(String matricule);
+
 }
 

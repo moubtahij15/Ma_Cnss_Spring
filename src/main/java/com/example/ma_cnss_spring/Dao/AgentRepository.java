@@ -9,6 +9,5 @@ public interface AgentRepository extends JpaRepository<Agent, Integer> {
 
     @Query("select agent from Agent agent where agent.email =?1")
     Agent findAgentByEmail(String email);
-
     Agent findByEmail(String email);
 }

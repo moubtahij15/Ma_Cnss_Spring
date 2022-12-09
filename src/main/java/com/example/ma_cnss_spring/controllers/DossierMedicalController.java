@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RequestMapping("dossier")
-@SessionAttributes({"step", "id_consultation", "id_dossier", "currentDossier"})
+//@SessionAttributes({"step", "id_consultation", "id_dossier", "currentDossier"})
+@SessionAttributes({"step", "currentDossier"})
 @Controller
 public class DossierMedicalController {
     final DossierMedicalService dossierMedicalService;
@@ -38,8 +39,9 @@ public class DossierMedicalController {
 
     @GetMapping()
     public String diplayDossier(Map<String, Object> model) {
-        model.put("listDossier", dossierMedicalService.findAll());
+        model.put("listDossier", dossierMedicalService.findAllEnAttente());
         model.put("dossierTraiter", new Dossiermedical());
+
         return "Agent/dashboard";
 
     }
@@ -47,12 +49,12 @@ public class DossierMedicalController {
     @GetMapping("/add")
     String displayAddDossier(Map<String, Object> model) {
         model.put("consultations", consultationService.findAll());
-
         model.putIfAbsent("currentDossier", new Dossiermedical());
         model.putIfAbsent("step", 1);
+        model.put("dossier", new Dossiermedical());
+        model.put("dossierInfo", dossierMedicalService.find(((Dossiermedical) model.get("currentDossier")).getId()));
+        model.put("mentant", String.valueOf((((Dossiermedical) model.get("currentDossier")).getMentantRemboussable())));
 
-        model.put("dossier", new Object());
-        model.put("currentDossier", (Dossiermedical) model.get("currentDossier"));
         return "Agent/addDossier";
     }
 
@@ -60,7 +62,6 @@ public class DossierMedicalController {
     String submitAddDossier(Map<String, Object> model, @RequestParam(value = "code", defaultValue = "0") String code, @RequestParam(value = "type", required = false, defaultValue = "0") int type, @RequestParam(value = "prix", defaultValue = "0") Double prix) {
 
         Dossiermedical currentDossier = (Dossiermedical) model.get("currentDossier");
-        System.out.println(currentDossier.getIdConsultation() + " from main ");
         int step = (int) model.get("step");
         System.out.println(step);
         if (step == 1) {
@@ -68,40 +69,39 @@ public class DossierMedicalController {
 //                    and c
 
             ConsultationPris consultationPris = consultationPrisService.save(new ConsultationPris(type));//save consultation and get id for current consultation
-//            int idConsultationPris = consultationPrisService.save(new ConsultationPris(type)).getId();//save consultation and get id for current consultation
             int idDossier = dossierMedicalService.save(new Dossiermedical(
                     consultationPris.getId(),
                     patientService.getIdPatientByMatricule(code)
             )).getId();
 //            save some id in session
-//            currentDossier= (Dossiermedical) model.get("currentDossier");
             currentDossier.setIdConsultation(consultationPris.getId());
             currentDossier.setId(idDossier);
-            System.out.println(consultationPris.getConsultationByIdConsultation());
-            currentDossier.setMentantRemboussable(consultationPris.getConsultationByIdConsultation().getPrixRembourssable());
-             model.put("step", 2);
-
-
+            currentDossier.setMentantRemboussable((consultationPris.getConsultationByIdConsultation().getPrixRembourssable()));
+            currentDossier.setMentantBase(prix);
+            model.put("step", 2);
             model.put("currentDossier", currentDossier);
+
 
         } else if (step == 2) {
 
-
             MedicamentPris medicamentPris = medicamaentPrisService.save(new MedicamentPris(currentDossier.getIdConsultation(), medicamaentService.getIdPatientByCode(code)));
-
             currentDossier.setMentantRemboussable(currentDossier.getMentantRemboussable() + medicamentPris.getMedicamentByIdMedicament().getPrixRembourssable());
-
-//
+            currentDossier.setMentantBase(currentDossier.getMentantBase() + medicamentPris.getMedicamentByIdMedicament().getPrixBase());
             model.put("currentDossier", currentDossier);
 
         } else if (step == 3) {
 
             DocumentPris documentPris = documentPrisService.save(new DocumentPris(currentDossier.getIdConsultation(), documentService.getIdDocumentByCode(code), prix));
             currentDossier.setMentantRemboussable(currentDossier.getMentantRemboussable() + ((prix * documentPris.getDocumentByIdDocument().getTauxRemboursement()) / 100));
+            currentDossier.setMentantBase(currentDossier.getMentantBase() + prix);
             model.put("currentDossier", currentDossier);
 
 
         } else if (step == 4) {
+            dossierMedicalService.affecterMentantDossier(currentDossier.getMentantBase(), currentDossier.getMentantRemboussable(), currentDossier.getId());
+            model.put("step", 1);
+            model.put("currentDossier", new Dossiermedical());
+            return "redirect:/dossier";
 
         }
         return "redirect:/dossier/add";
@@ -109,14 +109,21 @@ public class DossierMedicalController {
     }
 
     @PostMapping("next")
-    String nextStep(Map<String, Object> model) {
+    String nextStep(Map<String, Object> model, @RequestParam("direction") String direction) {
         int step = (int) model.get("step");
-        if (step == 2) {
-            model.put("step", 3);
-        } else if (step == 3) {
-            model.put("step", 4);
-        } else if (step == 4) {
-            model.put("step", 1);
+
+        if (direction.equals("avant")) {
+            if (step == 3) {
+                model.put("step", 2);
+            } else if (step == 4) {
+                model.put("step", 3);
+            }
+        } else {
+            if (step == 2) {
+                model.put("step", 3);
+            } else if (step == 3) {
+                model.put("step", 4);
+            }
         }
         return "redirect:/dossier/add";
 
@@ -128,6 +135,15 @@ public class DossierMedicalController {
             dossierMedicalService.validerDocumentMedical(id);
         } else dossierMedicalService.refuserDocumentMedical(id);
         return "redirect:/dossier";
+
+    }
+
+
+    @GetMapping("/patient/{id}")
+    public String displayDossierPatient(Map<String, Object> model, @PathVariable String id) {
+        model.put("listDossier", dossierMedicalService.findAllByMatricule(id));
+        model.put("dossierTraiter", new Dossiermedical());
+        return "Patient/dashboard";
 
     }
 }

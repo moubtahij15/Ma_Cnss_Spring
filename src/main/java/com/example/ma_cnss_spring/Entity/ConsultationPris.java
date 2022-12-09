@@ -73,7 +73,7 @@ public class ConsultationPris {
         this.consultationByIdConsultation = consultationByIdConsultation;
     }
 
-    @OneToMany(mappedBy = "consultationPrisByIdConsultation", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "consultationPrisByIdConsultation",   fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     public Collection<DocumentPris> getDocumentPrisesById() {
         return documentPrisesById;
     }

@@ -20,5 +20,6 @@ public interface DossierMedicalRepository extends JpaRepository<Dossiermedical, 
     @Query("update Dossiermedical dossier set dossier.mentantBase=?1 ,dossier.mentantRemboussable=?2 where dossier.id=?3")
     public int setMentant(double mentantBase, double mentantRemboursable, int id);
 
+    Dossiermedical findById(int id);
 }
 

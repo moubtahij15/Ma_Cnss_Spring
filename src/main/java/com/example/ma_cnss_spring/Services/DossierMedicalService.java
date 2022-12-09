@@ -19,8 +19,14 @@ public class DossierMedicalService {
     }
 
 
-    public List<Dossiermedical> findAll() {
+    public List<Dossiermedical> findAllByMatricule(String matricule) {
+        return dossierMedicalRepository.findAll().stream().filter(dossiermedical ->dossiermedical.getPatientByIdPatient().getMatricule().equals(matricule)).toList();
+//        return dossierMedicalRepository.findAll();
+    }
+
+    public List<Dossiermedical> findAllEnAttente() {
         return dossierMedicalRepository.findAll().stream().filter(dossiermedical -> dossiermedical.getEtat().equals(Etat.EN_ATTENTE.toString())).toList();
+//        return dossierMedicalRepository.findAll();
     }
 
     public void validerDocumentMedical(int id) {
@@ -34,4 +40,13 @@ public class DossierMedicalService {
     public Dossiermedical save(Dossiermedical dossiermedical) {
         return dossierMedicalRepository.save(dossiermedical);
     }
+
+    public void affecterMentantDossier(double mentantBase, double mentantRemboursable, int id) {
+        dossierMedicalRepository.setMentant(mentantBase, mentantRemboursable, id);
+    }
+
+    public Dossiermedical find(int id) {
+        return dossierMedicalRepository.findById(id);
+    }
+
 }

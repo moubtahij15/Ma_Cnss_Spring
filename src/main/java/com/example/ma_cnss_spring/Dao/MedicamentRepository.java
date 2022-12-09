@@ -9,6 +9,9 @@ import org.springframework.data.jpa.repository.Query;
 public interface MedicamentRepository extends JpaRepository<Medicament, Integer> {
 
     @Query("select medicament from Medicament  medicament where medicament.codeBarre=?1")
-    public Medicament findIdByCodeBarre(String codeBarre);
+        public Medicament findIdByCodeBarre(String codeBarre);
+
+    Medicament findByCodeBarre(String codeBarre);
+    
 }
 
